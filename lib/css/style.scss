@@ -1,0 +1,98 @@
+@import 'reset';
+@import 'userlist';
+@import 'top-filterbar';
+@import 'bottom-inputbar';
+@import 'buttons';
+@import 'messages';
+
+body, html {
+  background: white;
+  font-family: 'Fira Sans', sans-serif;
+  height: 100vh;
+  max-width: 900px;
+  min-width: 800px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 415px) {
+
+  body, html {
+    min-width: 350px;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .app-title {
+    display: none;
+  }
+
+  .nav-bar {
+    display: inline-block;
+    height: 15vh;
+    padding-top: 10px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .filter-field {
+    width: 80%;
+    display: inline;
+  }
+
+  .sort-btn {
+    font-size: 12pt;
+    margin-top: 10px;
+    width: 140px;
+  }
+
+  .user-list {
+    display: none;
+  }
+
+  .message-section {
+    height: 55vh;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .msg-img {
+    height: 35px;
+    padding: 0 0 0 10px;
+    width: 35px;
+  }
+
+  .msg-block {
+    width: 100%;
+  }
+
+  .message-input {
+    height: 18vh;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .draft-msg {
+    display: inline-block;
+    width: 100%;
+  }
+
+  .msg-field {
+    width: 75%;
+    margin: 10px 15px 0 20px;
+  }
+
+  .draft-msg-buttons {
+    margin-left: 10px;
+  }
+
+  .login-message button, p {
+    font-size: 10pt;
+  }
+
+  .signInOut {
+    height: 25px;
+    width: 80px;
+  }
+
+}
