@@ -1,1 +1,19 @@
 @import 'reset';
+@mixin newContactInput {
+  display: block;
+  margin: 10px 0 10px 0;
+
+}
+
+.name-input {
+  @include newContactInput ;
+}
+.email-input {
+  @include newContactInput ;
+}
+.social-input {
+  @include newContactInput ;
+}
+.notes-input {
+  @include newContactInput ;
+}
