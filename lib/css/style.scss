@@ -2,18 +2,47 @@
 @mixin newContactInput {
   display: block;
   margin: 10px 0 10px 0;
-
 }
+@mixin flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.input-container{
+  @include flex;
+}
+.welcome-container{
+  @include flex;
+}
+.header{
 
-.name-input {
-  @include newContactInput ;
+  display: flex;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 48px;
+}
+.first-name-input {
+  @include newContactInput;
+}
+.last-name-input {
+  @include newContactInput;
+}
+.organization-input {
+  @include newContactInput;
 }
 .email-input {
-  @include newContactInput ;
+  @include newContactInput;
 }
 .social-input {
-  @include newContactInput ;
+  @include newContactInput;
+}
+.github-input{
+  @include newContactInput;
+}
+.twitter-input{
+  @include newContactInput;
 }
 .notes-input {
-  @include newContactInput ;
+  @include newContactInput;
 }
