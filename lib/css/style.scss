@@ -5,6 +5,23 @@
 
 }
 
+// .Application{
+//   margin: auto;
+// }
+
+.input-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.header{
+
+  display: flex;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 48px;
+}
 .name-input {
   @include newContactInput ;
 }
