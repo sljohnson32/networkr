@@ -26,5 +26,9 @@ describe('Application', () => {
   it('should have WelcomeScreen component with 1 prop', function(){
     const wrapper = render(<Application />)
     assert.equal(wrapper.find('.Application').length,1)
-});
+  });
+  it.only('should have a sign in button', ()=>{
+    const wrapper = render(<Application />)
+    assert.equal(wrapper.find('.sign-in-btn').length,1)
+  });
 });
