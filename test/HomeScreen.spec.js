@@ -36,7 +36,7 @@ describe ('HomeScreen', ()=>{
     wrapper.find('.btn-signout').simulate('click');
     expect(signOut).to.have.property('callCount',1)
   });
-  it.only('should select the displayNewContactForm when display Contact form is run', ()=>{
+  it('should select the displayNewContactForm when display Contact form is run', ()=>{
     let displayNewContactForm = sinon.spy();
     const wrapper = mount(<HomeScreen displayNewContactForm={displayNewContactForm} />)
     wrapper.find('.btn-addnew').simulate('click');
