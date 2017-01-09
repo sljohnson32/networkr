@@ -7,6 +7,13 @@
 body{
   background-color: $darkgray;
 }
+//WELCOME SCREEN
+.welcome-container{
+  @include flex;
+}
+
+
+//HOME SCREEN
 .btn-signout{
   @include signOut;
   @include all-button;
@@ -39,6 +46,8 @@ body{
 .home{
   cursor: pointer;
 }
+
+
 .follow-up{
   margin: 0 10px 0 10px;
   cursor: pointer;
@@ -46,12 +55,18 @@ body{
 .contact{
   cursor: pointer;
 }
+
+//SUBMIT CONTACT
 .input-container{
   @include flex;
 }
-.welcome-container{
-  @include flex;
+.submit-contact{
+  @include all-button;
 }
+.submit-contact:hover{
+  @include button-hover;
+}
+
 .first-name-input {
   @include newContactInput;
 }
@@ -75,4 +90,42 @@ body{
 }
 .notes-input {
   @include newContactInput;
+}
+
+//CONTACTS PAGE
+.selected-user:hover{
+  cursor: pointer;
+}
+.contact-name{
+  @include contact-headers;
+}
+.org{
+  font-weight: bolder;
+}
+.email{
+  font-weight: bolder;
+}
+.social-header{
+  @include contact-headers;
+}
+.notes-header{
+  @include contact-headers;
+}
+.facebook{
+  font-weight: bolder;
+}
+.github{
+  font-weight: bold;
+}
+.twitter{
+  font-weight: bold;
+}
+.notes{
+  margin-bottom: 5px;
+}
+.edit-button{
+  @include all-button;
+}
+.edit-button:hover{
+  @include button-hover;
 }
