@@ -1,27 +1,72 @@
 @import 'reset';
-@mixin newContactInput {
-  display: block;
-  margin: 10px 0 10px 0;
+@import 'variables';
+@import 'mixins';
+
+
+
+body{
+  background-color: $darkgray;
 }
-@mixin flex {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.input-container{
-  @include flex;
-}
+//WELCOME SCREEN
 .welcome-container{
   @include flex;
 }
-.header{
 
-  display: flex;
-  justify-content: center;
-  font-family: 'Space Mono', monospace;
-  font-weight: 700;
-  font-size: 48px;
+
+//HOME SCREEN
+.btn-signout{
+  @include signOut;
+  @include all-button;
+  cursor: pointer;
 }
+.btn-addnew{
+  @include all-button;
+  cursor: pointer;
+  margin-top: 25px;
+}
+.btn-addnew:hover{
+  @include button-hover;
+}
+.btn-signout:hover {
+  @include button-hover;
+}
+.header{
+  @include header;
+}
+.btn-container{
+  @include flexCenter;
+}
+.navbar{
+  background-color: #E3F8FF;
+  @include flexCenter;
+}
+.nav-list {
+  @include flexCenter;
+}
+.home{
+  cursor: pointer;
+}
+
+
+.follow-up{
+  margin: 0 10px 0 10px;
+  cursor: pointer;
+}
+.contact{
+  cursor: pointer;
+}
+
+//SUBMIT CONTACT
+.input-container{
+  @include flex;
+}
+.submit-contact{
+  @include all-button;
+}
+.submit-contact:hover{
+  @include button-hover;
+}
+
 .first-name-input {
   @include newContactInput;
 }
@@ -45,4 +90,42 @@
 }
 .notes-input {
   @include newContactInput;
+}
+
+//CONTACTS PAGE
+.selected-user:hover{
+  cursor: pointer;
+}
+.contact-name{
+  @include contact-headers;
+}
+.org{
+  font-weight: bolder;
+}
+.email{
+  font-weight: bolder;
+}
+.social-header{
+  @include contact-headers;
+}
+.notes-header{
+  @include contact-headers;
+}
+.facebook{
+  font-weight: bolder;
+}
+.github{
+  font-weight: bold;
+}
+.twitter{
+  font-weight: bold;
+}
+.notes{
+  margin-bottom: 5px;
+}
+.edit-button{
+  @include all-button;
+}
+.edit-button:hover{
+  @include button-hover;
 }
