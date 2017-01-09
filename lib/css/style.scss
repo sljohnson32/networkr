@@ -18,6 +18,11 @@ body{
   @include button-hover;
 }
 
+.nav-selected{
+  padding: 0 3px;
+  background-color: cornflowerblue;
+}
+
 //HOME SCREEN
 .btn-signout{
   @include signOut;
@@ -98,8 +103,15 @@ body{
 }
 
 //CONTACTS PAGE
+.add-new-container{
+  @include flexCenter;
+}
 .selected-user:hover{
   cursor: pointer;
+  width: 150px;
+}
+.displayed-container{
+  @include flex;
 }
 .contact-name{
   @include contact-headers;
