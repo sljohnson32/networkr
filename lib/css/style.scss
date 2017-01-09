@@ -11,7 +11,17 @@ body{
 .welcome-container{
   @include flex;
 }
+.sign-in-btn{
+  @include all-button;
+}
+.sign-in-btn:hover{
+  @include button-hover;
+}
 
+.nav-selected{
+  padding: 0 3px;
+  background-color: cornflowerblue;
+}
 
 //HOME SCREEN
 .btn-signout{
@@ -93,8 +103,15 @@ body{
 }
 
 //CONTACTS PAGE
+.add-new-container{
+  @include flexCenter;
+}
 .selected-user:hover{
   cursor: pointer;
+  width: 150px;
+}
+.displayed-container{
+  @include flex;
 }
 .contact-name{
   @include contact-headers;
