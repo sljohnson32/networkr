@@ -8210,7 +8210,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	__webpack_require__(602);
+	__webpack_require__(603);
 	
 	(0, _reactDom.render)(_react2.default.createElement(_Application2.default, null), document.getElementById('application'));
 
@@ -29493,6 +29493,7 @@
 	
 	    _this.state = {
 	      user: null,
+	      contactDatabase: [],
 	      contactzz: []
 	    };
 	    return _this;
@@ -29504,41 +29505,53 @@
 	      var _this2 = this;
 	
 	      _firebase2.default.auth().onAuthStateChanged(function (user) {
-	        if (user) {
-	          _firebase2.default.database().ref(user.uid).limitToLast(50).on('value', function (snapshot) {
-	            var contactzz = snapshot.val() || {};
-	            _this2.setState({
-	              contactzz: (0, _lodash.map)(contactzz, function (val, key) {
-	                return (0, _lodash.extend)(val, { key: key });
-	              })
-	            });
-	          });
-	        }
+	        _this2.createDatabaseRef(user);
 	      });
 	    }
 	  }, {
-	    key: 'signInHandler',
-	    value: function signInHandler() {
+	    key: 'createDatabaseRef',
+	    value: function createDatabaseRef(user) {
 	      var _this3 = this;
 	
-	      (0, _firebase.signIn)().then(function (fromFirebase) {
-	        _this3.setState({ user: fromFirebase.user });
+	      this.setState({
+	        user: user,
+	        contactDatabase: user ? _firebase2.default.database().ref(user.uid) : null
+	      }, function () {
+	        _this3.createDatabaseListener(user);
 	      });
+	    }
+	  }, {
+	    key: 'createDatabaseListener',
+	    value: function createDatabaseListener(user) {
+	      var _this4 = this;
+	
+	      if (user) {
+	        _firebase2.default.database().ref(user.uid).on('value', function (snapshot) {
+	          var contactzz = snapshot.val() || {};
+	          _this4.setState({
+	            contactzz: (0, _lodash.map)(contactzz, function (val, key) {
+	              return (0, _lodash.extend)(val, { key: key });
+	            })
+	          });
+	        });
+	      } else {
+	        this.setState({
+	          contactzz: []
+	        });
+	      }
 	    }
 	  }, {
 	    key: 'addNewContact',
 	    value: function addNewContact(newContact) {
-	      var user = this.state.user;
-	
-	      _firebase2.default.database().ref(user.uid).push({
-	        contact: (0, _lodash.pick)(newContact, 'name', 'email', 'socialFB', 'followUp', 'notes', 'createdAt')
-	      });
+	      var newContactData = (0, _lodash.pick)(newContact, 'contactID', 'existingContact', 'firstName', 'lastName', 'organization', 'email', 'socialFB', 'gitHub', 'twitter', 'followUp', 'notes', 'createdAt');
+	      this.state.contactDatabase.push(newContactData);
 	    }
 	  }, {
-	    key: 'signOutHandler',
-	    value: function signOutHandler() {
-	      (0, _firebase.signOut)();
-	      this.setState({ user: null, contactzz: [] });
+	    key: 'editContact',
+	    value: function editContact(updatedContact) {
+	      debugger;
+	      var id = updatedContact.contactID;
+	      this.state.contactDatabase.child('{ id }').set(updatedContact);
 	    }
 	  }, {
 	    key: 'render',
@@ -29551,17 +29564,22 @@
 	        'div',
 	        { className: 'Application' },
 	        _react2.default.createElement(
-	          'h1',
+	          'div',
 	          { className: 'header' },
-	          'Networkr'
+	          _react2.default.createElement(
+	            'h1',
+	            null,
+	            'Welcome To Networkr'
+	          )
 	        ),
 	        user ? _react2.default.createElement(_HomeScreen2.default, {
 	          user: user,
 	          contactzz: contactzz,
 	          addNewContact: this.addNewContact.bind(this),
-	          signOut: this.signOutHandler.bind(this)
+	          editContact: this.editContact.bind(this),
+	          signOut: _firebase.signOut.bind(this)
 	        }) : _react2.default.createElement(_WelcomeScreen2.default, {
-	          signIn: this.signInHandler.bind(this)
+	          signIn: _firebase.signIn.bind(this)
 	        })
 	      );
 	    }
@@ -47437,15 +47455,10 @@
 	
 	      return _react2.default.createElement(
 	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'WELCOME!'
-	        ),
+	        { className: 'welcome-container' },
 	        _react2.default.createElement(
 	          'button',
-	          { onClick: function onClick() {
+	          { className: 'sign-in-btn', onClick: function onClick() {
 	              return signIn();
 	            } },
 	          'Sign In'
@@ -47487,11 +47500,13 @@
 	
 	var _Contactzz2 = _interopRequireDefault(_Contactzz);
 	
-	var _NewContactForm = __webpack_require__(491);
+	var _Navigation = __webpack_require__(602);
 	
-	var _NewContactForm2 = _interopRequireDefault(_NewContactForm);
+	var _Navigation2 = _interopRequireDefault(_Navigation);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -47511,26 +47526,38 @@
 	      onHome: true,
 	      onFollowUpzz: false,
 	      onContactzz: false,
-	      onNewContact: false,
-	      selectedUser: null
+	      onNewContactForm: false,
+	      selectedContact: null
 	    };
 	    return _this;
 	  }
 	
 	  _createClass(HomeScreen, [{
+	    key: 'setSelectedContact',
+	    value: function setSelectedContact(contact) {
+	      this.setState({ selectedContact: contact });
+	    }
+	  }, {
+	    key: 'toggleNewContactForm',
+	    value: function toggleNewContactForm() {
+	      this.setState({ onNewContactForm: true, selectedContact: null });
+	    }
+	  }, {
 	    key: 'displayContactzz',
 	    value: function displayContactzz() {
-	      this.setState({ onHome: false, onContactzz: true });
+	      this.setState({ onHome: false, onFollowUpzz: false, onContactzz: true, onNewContactForm: false });
 	    }
 	  }, {
 	    key: 'displayFollowUpzz',
 	    value: function displayFollowUpzz() {
-	      this.setState({ onHome: false, onFollowUpzz: true });
+	      this.setState({ onHome: false, onContactzz: false, onFollowUpzz: true, onNewContactForm: false });
 	    }
 	  }, {
-	    key: 'displayNewContactForm',
-	    value: function displayNewContactForm() {
-	      this.setState({ onNewContact: true, onHome: false });
+	    key: 'displayHome',
+	    value: function displayHome() {
+	      var _setState;
+	
+	      this.setState((_setState = { onFollowUpzz: false }, _defineProperty(_setState, 'onFollowUpzz', false), _defineProperty(_setState, 'onHome', true), _defineProperty(_setState, 'onNewContactForm', false), _setState));
 	    }
 	  }, {
 	    key: 'showStuff',
@@ -47538,12 +47565,12 @@
 	      var user = props.user,
 	          contactzz = props.contactzz,
 	          addNewContact = props.addNewContact,
+	          editContact = props.editContact,
 	          signOut = props.signOut;
 	      var _state = this.state,
 	          onHome = _state.onHome,
 	          onFollowUpzz = _state.onFollowUpzz,
-	          onContactzz = _state.onContactzz,
-	          onNewContact = _state.onNewContact;
+	          onContactzz = _state.onContactzz;
 	
 	      if (onHome) {
 	        return _react2.default.createElement(_Home2.default, {
@@ -47551,23 +47578,25 @@
 	          displayFollowUpzz: this.displayFollowUpzz.bind(this)
 	        });
 	      }
-	      if (onFollowUpzz) {
-	        return _react2.default.createElement(_FollowUpzz2.default, null);
-	      }
 	      if (onContactzz) {
 	        return _react2.default.createElement(_Contactzz2.default, {
-	          contactzz: contactzz });
+	          contactzz: contactzz,
+	          displayContactzz: this.displayContactzz.bind(this),
+	          addNewContact: addNewContact,
+	          editContact: editContact,
+	          onNewContactForm: this.state.onNewContactForm,
+	          selectedContact: this.state.selectedContact,
+	          setSelectedContact: this.setSelectedContact.bind(this),
+	          toggleNewContactForm: this.toggleNewContactForm.bind(this)
+	        });
 	      }
-	      if (onNewContact) {
-	        return _react2.default.createElement(_NewContactForm2.default, {
-	          addNewContact: addNewContact });
+	      if (onFollowUpzz) {
+	        return _react2.default.createElement(_FollowUpzz2.default, null);
 	      }
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
-	
 	      var _props = this.props,
 	          user = _props.user,
 	          contactzz = _props.contactzz,
@@ -47580,21 +47609,6 @@
 	        _react2.default.createElement(
 	          'button',
 	          {
-	            className: 'btn-addnew',
-	            onClick: function onClick() {
-	              return _this2.displayNewContactForm();
-	            }
-	          },
-	          'Add Contact'
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'WE\'RE IN!'
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          {
 	            className: 'btn-signout',
 	            onClick: function onClick() {
 	              return signOut();
@@ -47602,7 +47616,29 @@
 	          },
 	          'Sign Out'
 	        ),
-	        this.showStuff(this.props)
+	        _react2.default.createElement(_Navigation2.default, {
+	          onHome: this.state.onHome,
+	          displayHome: this.displayHome.bind(this),
+	          onFollowUpzz: this.state.onFollowUpzz,
+	          displayFollowUpzz: this.displayFollowUpzz.bind(this),
+	          onContactzz: this.state.onContactzz,
+	          displayContactzz: this.displayContactzz.bind(this)
+	        }),
+	        this.showStuff(this.props),
+	        _react2.default.createElement(
+	          'section',
+	          { className: 'btn-container' },
+	          _react2.default.createElement(
+	            'button',
+	            {
+	              className: 'btn-signout',
+	              onClick: function onClick() {
+	                return signOut();
+	              }
+	            },
+	            'Sign Out'
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -47654,13 +47690,14 @@
 	
 	      return _react2.default.createElement(
 	        'div',
-	        null,
+	        { className: 'home-container' },
 	        _react2.default.createElement(
 	          'section',
 	          { className: 'upcoming-follow-ups' },
 	          _react2.default.createElement(
 	            'h2',
-	            { onClick: function onClick() {
+	            { className: 'follow-ups',
+	              onClick: function onClick() {
 	                return displayFollowUpzz();
 	              } },
 	            'Follow-up'
@@ -47676,7 +47713,7 @@
 	          { className: 'recent-contacts' },
 	          _react2.default.createElement(
 	            'h2',
-	            { onClick: function onClick() {
+	            { className: 'display-contactzz', onClick: function onClick() {
 	                return displayContactzz();
 	              } },
 	            'Most Recent Contacts'
@@ -47778,6 +47815,10 @@
 	
 	var _ContactCard2 = _interopRequireDefault(_ContactCard);
 	
+	var _NewContactForm = __webpack_require__(491);
+	
+	var _NewContactForm2 = _interopRequireDefault(_NewContactForm);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -47796,27 +47837,90 @@
 	  }
 	
 	  _createClass(Contactzz, [{
+	    key: 'displayContact',
+	    value: function displayContact(props) {
+	      var contactzz = props.contactzz,
+	          addNewContact = props.addNewContact,
+	          editContact = props.editContact,
+	          onNewContactForm = props.onNewContactForm,
+	          toggleNewContactForm = props.toggleNewContactForm,
+	          selectedContact = props.selectedContact,
+	          setSelectedContact = props.setSelectedContact;
+	
+	      if (onNewContactForm) {
+	        return _react2.default.createElement(_NewContactForm2.default, {
+	          contact: {},
+	          addNewContact: addNewContact,
+	          editContact: editContact,
+	          editView: true,
+	          toggleNewContactForm: toggleNewContactForm,
+	          setSelectedContact: setSelectedContact
+	        });
+	      } else if (selectedContact !== null) {
+	        return _react2.default.createElement(_NewContactForm2.default, {
+	          contact: selectedContact,
+	          addNewContact: addNewContact,
+	          editContact: editContact,
+	          editView: false,
+	          setSelectedContact: setSelectedContact
+	        });
+	      } else if (selectedContact === null) {
+	        return _react2.default.createElement(
+	          'h3',
+	          null,
+	          'Please select a contact from the list on the left to display more details'
+	        );
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var contactzz = this.props.contactzz;
+	      var _props = this.props,
+	          contactzz = _props.contactzz,
+	          addNewContact = _props.addNewContact,
+	          displayContactzz = _props.displayContactzz,
+	          editContact = _props.editContact,
+	          onNewContactForm = _props.onNewContactForm,
+	          toggleNewContactForm = _props.toggleNewContactForm,
+	          selectedContact = _props.selectedContact,
+	          setSelectedContact = _props.setSelectedContact;
 	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(
-	          'section',
+	          'aside',
 	          { className: 'all-contactzz' },
 	          _react2.default.createElement(
 	            'h2',
 	            null,
 	            'Contacts'
 	          ),
+	          _react2.default.createElement(
+	            'button',
+	            {
+	              className: 'btn-addnew',
+	              onClick: function onClick() {
+	                return toggleNewContactForm();
+	              }
+	            },
+	            'Add Contact'
+	          ),
 	          contactzz.map(function (contact, index) {
-	            return _react2.default.createElement(_ContactCard2.default, {
+	            var card = _react2.default.createElement(_ContactCard2.default, {
 	              key: index,
-	              contact: contact.contact
+	              contact: contact,
+	              selectedContact: selectedContact,
+	              setSelectedContact: setSelectedContact,
+	              displayContactzz: displayContactzz
 	            });
+	            return card;
 	          })
+	        ),
+	        _react2.default.createElement(
+	          'section',
+	          { className: 'contact-info' },
+	          this.displayContact(this.props)
 	        )
 	      );
 	    }
@@ -47861,45 +47965,112 @@
 	  }
 	
 	  _createClass(ContactCard, [{
+	    key: 'selectContact',
+	
+	    // constructor() {
+	    //   super();
+	    //   this.state = {
+	    //     selected: false
+	    //   };
+	    // }
+	
+	    value: function selectContact(props) {
+	      var contact = props.contact,
+	          setSelectedContact = props.setSelectedContact,
+	          selectedContact = props.selectedContact,
+	          displayContactzz = props.displayContactzz;
+	
+	      if (contact !== selectedContact) {
+	        displayContactzz();
+	        setSelectedContact(contact);
+	      }
+	      if (contact === selectedContact) {
+	        displayContactzz();
+	        setSelectedContact(null);
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      debugger;
-	      var contact = this.props.contact;
+	      var _this2 = this;
 	
-	      return _react2.default.createElement(
-	        'ul',
-	        null,
-	        _react2.default.createElement(
-	          'li',
+	      var _props = this.props,
+	          contact = _props.contact,
+	          viewDetails = _props.viewDetails,
+	          selectedContact = _props.selectedContact,
+	          setSelectedContact = _props.setSelectedContact;
+	
+	      if (contact === selectedContact) {
+	        return _react2.default.createElement(
+	          'div',
 	          null,
-	          contact.name
-	        ),
-	        _react2.default.createElement(
-	          'li',
+	          _react2.default.createElement(
+	            'ul',
+	            {
+	              className: 'selected-user',
+	              onClick: function onClick() {
+	                return _this2.selectContact(_this2.props);
+	              }
+	            },
+	            _react2.default.createElement(
+	              'li',
+	              { className: 'selected-user' },
+	              contact.firstName
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              { className: 'selected-user' },
+	              contact.lastName
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              { className: 'selected-user' },
+	              contact.organization
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              { className: 'selected-user' },
+	              contact.followUp
+	            )
+	          ),
+	          _react2.default.createElement('br', null)
+	        );
+	      }
+	      if (contact !== selectedContact) {
+	        return _react2.default.createElement(
+	          'div',
 	          null,
-	          contact.email
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          contact.socialFB
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          contact.followUp
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          contact.notes
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          contact.createdAt
-	        )
-	      );
+	          _react2.default.createElement(
+	            'ul',
+	            {
+	              onClick: function onClick() {
+	                return _this2.selectContact(_this2.props);
+	              }
+	            },
+	            _react2.default.createElement(
+	              'li',
+	              { className: 'selected-user' },
+	              contact.firstName
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              { className: 'selected-user' },
+	              contact.lastName
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              { className: 'selected-user' },
+	              contact.organization
+	            ),
+	            _react2.default.createElement(
+	              'li',
+	              { className: 'selected-user' },
+	              contact.followUp
+	            )
+	          ),
+	          _react2.default.createElement('br', null)
+	        );
+	      }
 	    }
 	  }]);
 	
@@ -47947,11 +48118,19 @@
 	    var _this = _possibleConstructorReturn(this, (NewContactForm.__proto__ || Object.getPrototypeOf(NewContactForm)).call(this, props));
 	
 	    _this.state = {
-	      name: _this.props.name || '',
-	      email: _this.props.email || '',
-	      socialFB: _this.props.socialFB || '',
-	      followUp: _this.props.followUp || false,
-	      notes: _this.props.notes || ''
+	      editView: _this.props.editView,
+	      contactID: _this.props.contact.contactID || Date.now(),
+	      existingContact: _this.props.contact.existingContact || false,
+	      firstName: _this.props.contact.firstName || '',
+	      lastName: _this.props.contact.lastName || '',
+	      organization: _this.props.contact.organization || '',
+	      email: _this.props.contact.email || '',
+	      socialFB: _this.props.contact.socialFB || '',
+	      gitHub: _this.props.contact.gitHub || '',
+	      twitter: _this.props.contact.twitter || '',
+	      followUp: _this.props.contact.followUp || false,
+	      notes: _this.props.contact.notes || '',
+	      createdAt: _this.props.contact.creadedAt || (0, _moment2.default)().format('MMMM Do YYYY, h:mm a')
 	    };
 	    return _this;
 	  }
@@ -47962,93 +48141,273 @@
 	      this.setState(_defineProperty({}, keyName, e.target.value));
 	    }
 	  }, {
-	    key: 'submitContact',
-	    value: function submitContact(addNewContact) {
-	      var newContact = {
-	        name: this.state.name,
+	    key: 'newContact',
+	    value: function newContact() {
+	      return {
+	        contactID: this.state.contactID,
+	        existingContact: true,
+	        firstName: this.state.firstName,
+	        lastName: this.state.lastName,
+	        organization: this.state.organization,
 	        email: this.state.email,
 	        socialFB: this.state.socialFB,
+	        gitHub: this.state.gitHub,
+	        twitter: this.state.twitter,
 	        followUp: this.state.followUp,
 	        notes: this.state.notes,
-	        createdAt: (0, _moment2.default)().format('MMMM Do YYYY, h:mm a')
+	        createdAt: this.state.createdAt
 	      };
-	      addNewContact(newContact);
+	    }
+	  }, {
+	    key: 'submitContact',
+	    value: function submitContact(handler, setSelectedContact) {
+	      var newContact = this.newContact();
+	      this.setState({ existingContact: true });
+	      handler(newContact);
+	      setSelectedContact(newContact);
+	    }
+	  }, {
+	    key: 'toggleEditContact',
+	    value: function toggleEditContact() {
+	      this.setState({ editView: !this.state.editView, existingContact: true });
+	    }
+	  }, {
+	    key: 'editSubmitButton',
+	    value: function editSubmitButton(addNewContact, editContact, setSelectedContact) {
+	      var _this2 = this;
+	
+	      if (this.state.existingContact && !this.state.editView) {
+	        return _react2.default.createElement(
+	          'button',
+	          { className: 'edit-button',
+	            onClick: function onClick() {
+	              return _this2.toggleEditContact();
+	            }
+	          },
+	          'Edit Contact'
+	        );
+	      } else if (this.state.existingContact && this.state.editView) {
+	        return _react2.default.createElement(
+	          'button',
+	          { className: 'save-changes',
+	            onClick: function onClick() {
+	              return _this2.submitContact(editContact, setSelectedContact);
+	            }
+	          },
+	          'SAVE CHANGES'
+	        );
+	      } else if (!this.state.existingContact && this.state.editView) {
+	        return _react2.default.createElement(
+	          'button',
+	          { className: 'submit-contact',
+	            onClick: function onClick() {
+	              return _this2.submitContact(addNewContact, setSelectedContact);
+	            }
+	          },
+	          'SUBMIT'
+	        );
+	      }
+	    }
+	  }, {
+	    key: 'contactDisplayHandler',
+	    value: function contactDisplayHandler(addNewContact, editContact, viewDetails) {
+	      var _this3 = this;
+	
+	      if (this.state.editView) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'input-container' },
+	          _react2.default.createElement(
+	            'section',
+	            { className: 'new-contact' },
+	            _react2.default.createElement('img', { src: '' }),
+	            _react2.default.createElement(
+	              'h2',
+	              null,
+	              'Add A New Contact'
+	            )
+	          ),
+	          _react2.default.createElement('input', {
+	            className: 'first-name-input',
+	            value: this.state.firstName,
+	            name: 'firstName',
+	            placeholder: 'First Name',
+	            type: 'text',
+	            onChange: function onChange(e) {
+	              _this3.updateState(e, 'firstName');
+	            }
+	          }),
+	          _react2.default.createElement('input', {
+	            className: 'last-name-input',
+	            value: this.state.lastName,
+	            name: 'lastName',
+	            placeholder: 'Last Name',
+	            type: 'text',
+	            onChange: function onChange(e) {
+	              _this3.updateState(e, 'lastName');
+	            }
+	          }),
+	          _react2.default.createElement('input', {
+	            className: 'organization-input',
+	            value: this.state.organization,
+	            name: 'organization',
+	            placeholder: 'Organization',
+	            type: 'text',
+	            onChange: function onChange(e) {
+	              _this3.updateState(e, 'organization');
+	            }
+	          }),
+	          _react2.default.createElement('input', {
+	            className: 'email-input',
+	            value: this.state.email,
+	            name: 'email',
+	            placeholder: 'email',
+	            type: 'text',
+	            onChange: function onChange(e) {
+	              _this3.updateState(e, 'email');
+	            }
+	          }),
+	          _react2.default.createElement('input', {
+	            className: 'social-input',
+	            value: this.state.socialFB,
+	            name: 'socialFB',
+	            placeholder: 'facebook',
+	            type: 'text',
+	            onChange: function onChange(e) {
+	              _this3.updateState(e, 'socialFB');
+	            }
+	          }),
+	          _react2.default.createElement('input', {
+	            className: 'github-input',
+	            value: this.state.gitHub,
+	            name: 'gitHub',
+	            placeholder: 'Git-Hub',
+	            type: 'text',
+	            onChange: function onChange(e) {
+	              _this3.updateState(e, 'gitHub');
+	            }
+	          }),
+	          _react2.default.createElement('input', {
+	            className: 'twitter-input',
+	            value: this.state.twitter,
+	            name: 'twitter',
+	            placeholder: 'Twitter',
+	            type: 'text',
+	            onChange: function onChange(e) {
+	              _this3.updateState(e, 'twitter');
+	            }
+	          }),
+	          _react2.default.createElement('input', {
+	            className: 'notes-input',
+	            value: this.state.notes,
+	            name: 'notes',
+	            placeholder: 'notes',
+	            type: 'text',
+	            onChange: function onChange(e) {
+	              _this3.updateState(e, 'notes');
+	            }
+	          }),
+	          this.editSubmitButton(addNewContact, editContact, viewDetails)
+	        );
+	      }
+	      if (!this.state.editView) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'input-container' },
+	          _react2.default.createElement(
+	            'section',
+	            { className: 'existing-contact' },
+	            _react2.default.createElement(
+	              'h2',
+	              { className: 'contact-name' },
+	              this.state.firstName,
+	              ' ',
+	              this.state.lastName
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'h4',
+	            { className: 'contact-org' },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'org' },
+	              'Organization:'
+	            ),
+	            ' ',
+	            this.state.organization
+	          ),
+	          _react2.default.createElement(
+	            'h4',
+	            { className: 'contact-email' },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'email' },
+	              'Email:'
+	            ),
+	            ' ',
+	            this.state.email
+	          ),
+	          _react2.default.createElement(
+	            'h2',
+	            { className: 'social-header' },
+	            'Social Media'
+	          ),
+	          _react2.default.createElement(
+	            'h4',
+	            { className: 'contact-FB' },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'facebook' },
+	              'Facebook:'
+	            ),
+	            ' ',
+	            this.state.socialFB
+	          ),
+	          _react2.default.createElement(
+	            'h4',
+	            { className: 'contact-GH' },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'github' },
+	              'Github:'
+	            ),
+	            ' ',
+	            this.state.gitHub
+	          ),
+	          _react2.default.createElement(
+	            'h4',
+	            { className: 'contact-twitter' },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'twitter' },
+	              'Twitter:'
+	            ),
+	            ' ',
+	            this.state.twitter
+	          ),
+	          _react2.default.createElement(
+	            'h4',
+	            { className: 'notes-header' },
+	            'Notes:'
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            { className: 'notes' },
+	            this.state.notes
+	          ),
+	          this.editSubmitButton(addNewContact, editContact)
+	        );
+	      }
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
+	      var _props = this.props,
+	          addNewContact = _props.addNewContact,
+	          editContact = _props.editContact,
+	          setSelectedContact = _props.setSelectedContact;
 	
-	      var addNewContact = this.props.addNewContact;
-	
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'section',
-	          { className: 'contact' },
-	          _react2.default.createElement('img', { src: '' }),
-	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Name of Contact'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'This is where we\'ll map ALL contacts'
-	          )
-	        ),
-	        _react2.default.createElement('input', {
-	          className: 'name-input',
-	          value: this.state.name,
-	          name: 'name',
-	          placeholder: 'name',
-	          type: 'text',
-	          onChange: function onChange(e) {
-	            _this2.updateState(e, 'name');
-	          }
-	        }),
-	        _react2.default.createElement('input', {
-	          className: 'email-input',
-	          value: this.state.email,
-	          name: 'email',
-	          placeholder: 'email',
-	          type: 'text',
-	          onChange: function onChange(e) {
-	            _this2.updateState(e, 'email');
-	          }
-	        }),
-	        _react2.default.createElement('input', {
-	          className: 'social-input',
-	          value: this.state.socialFB,
-	          name: 'socialFB',
-	          placeholder: 'facebook',
-	          type: 'text',
-	          onChange: function onChange(e) {
-	            _this2.updateState(e, 'socialFB');
-	          }
-	        }),
-	        _react2.default.createElement('input', {
-	          className: 'notes-input',
-	          value: this.state.notes,
-	          name: 'notes',
-	          placeholder: 'notes',
-	          type: 'text',
-	          onChange: function onChange(e) {
-	            _this2.updateState(e, 'notes');
-	          }
-	        }),
-	        _react2.default.createElement(
-	          'button',
-	          {
-	            onClick: function onClick() {
-	              return _this2.submitContact(addNewContact);
-	            }
-	          },
-	          'SUBMIT'
-	        )
-	      );
+	      return this.contactDisplayHandler(addNewContact, editContact, setSelectedContact);
 	    }
 	  }]);
 	
@@ -62945,13 +63304,182 @@
 /* 602 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(299);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Navigation = function (_Component) {
+	  _inherits(Navigation, _Component);
+	
+	  function Navigation() {
+	    _classCallCheck(this, Navigation);
+	
+	    return _possibleConstructorReturn(this, (Navigation.__proto__ || Object.getPrototypeOf(Navigation)).apply(this, arguments));
+	  }
+	
+	  _createClass(Navigation, [{
+	    key: 'DisplayNav',
+	
+	    // constructor(props) {
+	    //   super();
+	    //   this.state = {
+	    //     home: false
+	    //   };
+	    // }
+	
+	    value: function DisplayNav(props) {
+	      var displayHome = props.displayHome,
+	          displayContactzz = props.displayContactzz,
+	          displayFollowUpzz = props.displayFollowUpzz,
+	          onHome = props.onHome,
+	          onFollowUpzz = props.onFollowUpzz,
+	          onContactzz = props.onContactzz,
+	          onNewContactForm = props.onNewContactForm;
+	
+	      if (onHome) {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'section',
+	            { className: 'navbar' },
+	            _react2.default.createElement(
+	              'ul',
+	              { className: 'nav-list' },
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'home' },
+	                'Home'
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-selected follow-up', onClick: function onClick() {
+	                    return displayFollowUpzz();
+	                  } },
+	                'Follow-ups'
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-selected contact', onClick: function onClick() {
+	                    return displayContactzz();
+	                  } },
+	                'Contacts'
+	              )
+	            )
+	          )
+	        );
+	      }
+	      if (onFollowUpzz) {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'section',
+	            { className: 'navbar' },
+	            _react2.default.createElement(
+	              'ul',
+	              { className: 'nav-list' },
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'home', onClick: function onClick() {
+	                    return displayHome();
+	                  } },
+	                'Home'
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'nav-selected follow-up' },
+	                'Follow-ups'
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'contact', onClick: function onClick() {
+	                    return displayContactzz();
+	                  } },
+	                'Contacts'
+	              )
+	            )
+	          )
+	        );
+	      }
+	      if (onContactzz) {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'section',
+	            { className: 'navbar' },
+	            _react2.default.createElement(
+	              'ul',
+	              { className: 'nav-list' },
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'home', onClick: function onClick() {
+	                    return displayHome();
+	                  } },
+	                'Home'
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                { className: 'follow-up', onClick: function onClick() {
+	                    return displayFollowUpzz();
+	                  } },
+	                'Follow-ups'
+	              ),
+	              _react2.default.createElement(
+	                'li',
+	                {
+	                  className: 'nav-selected contact',
+	                  onClick: function onClick() {
+	                    return displayContactzz();
+	                  }
+	                },
+	                'Contacts'
+	              )
+	            )
+	          )
+	        );
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return this.DisplayNav(this.props);
+	    }
+	  }]);
+	
+	  return Navigation;
+	}(_react.Component);
+	
+	exports.default = Navigation;
+
+/***/ },
+/* 603 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(603);
+	var content = __webpack_require__(604);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(605)(content, {});
+	var update = __webpack_require__(606)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -62968,21 +63496,21 @@
 	}
 
 /***/ },
-/* 603 */
+/* 604 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(604)();
+	exports = module.exports = __webpack_require__(605)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n.name-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.email-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.social-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.notes-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n", ""]);
+	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\nbody {\n  background-color: #95a5a6; }\n\n.welcome-container {\n  display: flex;\n  flex-direction: column;\n  align-items: center; }\n\n.btn-signout {\n  position: absolute;\n  left: 5px;\n  top: 10px;\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF;\n  cursor: pointer; }\n\n.btn-addnew {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF;\n  cursor: pointer;\n  margin-top: 25px; }\n\n.btn-addnew:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.btn-signout:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.header {\n  display: flex;\n  justify-content: center;\n  font-family: 'Space Mono', monospace;\n  font-weight: 700;\n  font-size: 48px;\n  background-color: #415F9D;\n  padding: 40px; }\n\n.btn-container {\n  display: flex;\n  justify-content: center; }\n\n.navbar {\n  background-color: #E3F8FF;\n  display: flex;\n  justify-content: center; }\n\n.nav-list {\n  display: flex;\n  justify-content: center; }\n\n.home {\n  cursor: pointer; }\n\n.follow-up {\n  margin: 0 10px 0 10px;\n  cursor: pointer; }\n\n.contact {\n  cursor: pointer; }\n\n.input-container {\n  display: flex;\n  flex-direction: column;\n  align-items: center; }\n\n.submit-contact {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF; }\n\n.submit-contact:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.first-name-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.last-name-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.organization-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.email-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.social-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.github-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.twitter-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.notes-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.selected-user:hover {\n  cursor: pointer; }\n\n.contact-name {\n  font-weight: bolder;\n  margin: 10px 0; }\n\n.org {\n  font-weight: bolder; }\n\n.email {\n  font-weight: bolder; }\n\n.social-header {\n  font-weight: bolder;\n  margin: 10px 0; }\n\n.notes-header {\n  font-weight: bolder;\n  margin: 10px 0; }\n\n.facebook {\n  font-weight: bolder; }\n\n.github {\n  font-weight: bold; }\n\n.twitter {\n  font-weight: bold; }\n\n.notes {\n  margin-bottom: 5px; }\n\n.edit-button {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF; }\n\n.edit-button:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 604 */
+/* 605 */
 /***/ function(module, exports) {
 
 	/*
@@ -63038,7 +63566,7 @@
 
 
 /***/ },
-/* 605 */
+/* 606 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
