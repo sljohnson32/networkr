@@ -11,7 +11,12 @@ body{
 .welcome-container{
   @include flex;
 }
-
+.sign-in-btn{
+  @include all-button;
+}
+.sign-in-btn:hover{
+  @include button-hover;
+}
 
 //HOME SCREEN
 .btn-signout{
