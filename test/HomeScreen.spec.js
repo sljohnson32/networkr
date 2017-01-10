@@ -24,7 +24,7 @@ describe ('HomeScreen', ()=>{
   });
   it('should have a onNewContact state of false', ()=>{
     const wrapper = shallow(<HomeScreen />)
-    assert.equal(wrapper.state('onNewContact'),false)
+    assert.equal(wrapper.state('onNewContactForm'),false)
   });
   it('should have a home component',()=>{
     const wrapper = render(<HomeScreen />)
@@ -35,12 +35,6 @@ describe ('HomeScreen', ()=>{
     const wrapper = mount(<HomeScreen signOut = {signOut} />)
     wrapper.find('.btn-signout').simulate('click');
     expect(signOut).to.have.property('callCount',1)
-  });
-  it('should select the displayNewContactForm when display Contact form is run', ()=>{
-    let displayNewContactForm = sinon.spy();
-    const wrapper = mount(<HomeScreen displayNewContactForm={displayNewContactForm} />)
-    wrapper.find('.btn-addnew').simulate('click');
-    expect(displayNewContactForm).to.have.property('callCount',1)
   });
 
 });
