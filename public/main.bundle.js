@@ -29544,13 +29544,13 @@
 	    key: 'addNewContact',
 	    value: function addNewContact(newContact) {
 	      var newContactData = (0, _lodash.pick)(newContact, 'contactID', 'existingContact', 'firstName', 'lastName', 'organization', 'email', 'socialFB', 'gitHub', 'twitter', 'followUp', 'notes', 'createdAt');
-	      this.state.contactDatabase.push(newContactData);
+	      this.state.contactDatabase.child(newContact.contactID).set(newContactData);
 	    }
 	  }, {
 	    key: 'editContact',
 	    value: function editContact(updatedContact) {
 	      var id = updatedContact.contactID;
-	      this.state.contactDatabase.child('{ id }').update(updatedContact);
+	      this.state.contactDatabase.child(id).update(updatedContact);
 	    }
 	  }, {
 	    key: 'render',
@@ -47909,16 +47909,13 @@
 	  }, {
 	    key: 'toggleFollowUp',
 	    value: function toggleFollowUp(editContact) {
-	      var _this2 = this;
 	
-	      this.setState({ followUp: false }, function () {
-	        editContact(_this2.updatedContact());
-	      });
+	      this.setState({ followUp: false }, editContact(this.updatedContact()));
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this3 = this;
+	      var _this2 = this;
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -47944,7 +47941,7 @@
 	          'button',
 	          { className: 'follow-up-toggle',
 	            onClick: function onClick() {
-	              return _this3.toggleFollowUp(_this3.props.editContact);
+	              return _this2.toggleFollowUp(_this2.props.editContact);
 	            } },
 	          'Complete Follow up'
 	        )
