@@ -1,0 +1,24 @@
+@import 'variables';
+@import 'mixins';
+
+//WELCOME SCREEN
+.welcome-container{
+  @include flex;
+  padding-top: 30px;
+  h2 {
+    @include page-header;
+  }
+}
+.sign-in-btn{
+  @include all-button;
+}
+.sign-in-btn:hover{
+  @include button-hover;
+}
+
+.nav-selected{
+  padding: 0 3px;
+  text-decoration: underline;
+  font-weight: bolder;
+  font-size: 20px;
+}

@@ -25,6 +25,12 @@
   padding: 40px;
 }
 
+@mixin page-header {
+  margin: 20px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
 @mixin all-button {
   border: none;
   border-radius: 12px;
