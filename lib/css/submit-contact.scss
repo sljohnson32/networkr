@@ -1,0 +1,38 @@
+@import 'variables';
+@import 'mixins';
+
+//SUBMIT CONTACT
+.input-container{
+  @include flex;
+}
+.submit-contact{
+  @include all-button;
+}
+.submit-contact:hover{
+  @include button-hover;
+}
+
+.first-name-input {
+  @include newContactInput;
+}
+.last-name-input {
+  @include newContactInput;
+}
+.organization-input {
+  @include newContactInput;
+}
+.email-input {
+  @include newContactInput;
+}
+.social-input {
+  @include newContactInput;
+}
+.github-input{
+  @include newContactInput;
+}
+.twitter-input{
+  @include newContactInput;
+}
+.notes-input {
+  @include newContactInput;
+}

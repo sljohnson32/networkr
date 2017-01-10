@@ -1,0 +1,52 @@
+@import 'variables';
+@import 'mixins';
+
+//HOME SCREEN
+.btn-signout{
+  @include signOut;
+  @include all-button;
+  cursor: pointer;
+}
+.btn-addnew{
+  @include all-button;
+  cursor: pointer;
+  margin-top: 25px;
+}
+.btn-addnew:hover{
+  @include button-hover;
+}
+.btn-signout:hover {
+  @include button-hover;
+}
+.header{
+  @include header;
+}
+.btn-container{
+  @include flexCenter;
+}
+.navbar{
+  background-color: #E3F8FF;
+  @include flexCenter;
+}
+.nav-list {
+  @include flexCenter;
+  height: 30px;
+  align-items: center;
+}
+.home{
+  cursor: pointer;
+}
+.follow-up{
+  margin: 0 10px 0 10px;
+  cursor: pointer;
+}
+.contact{
+  cursor: pointer;
+}
+.welcome-msg {
+  @include flex;
+  padding-top: 20px;
+  h2 {
+    @include page-header;
+  }
+}

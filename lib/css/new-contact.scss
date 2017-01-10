@@ -1,0 +1,67 @@
+@import 'variables';
+@import 'mixins';
+
+//CONTACTS PAGE
+.add-new-container{
+  text-align: center;
+  margin: 0 30px 20px;
+}
+.all-contactzz {
+  display: inline-block;
+  width: 30%;
+  height: 80%;
+}
+.contact-directory {
+  display: inline-block;
+  text-align: center;
+  h3 {
+    margin: 10px;
+  }
+}
+.displayed-container {
+  text-align: center;
+}
+.user .selected-user {
+  text-align: center;
+}
+.selected-user:hover{
+  cursor: pointer;
+  width: 150px;
+}
+.contact-info {
+  display: inline-block;
+  width: 60%;
+}
+.contact-name{
+  @include contact-headers;
+}
+.org{
+  font-weight: bolder;
+}
+.email{
+  font-weight: bolder;
+}
+.social-header{
+  @include contact-headers;
+}
+.notes-header{
+  @include contact-headers;
+}
+.facebook{
+  font-weight: bolder;
+}
+.github{
+  font-weight: bold;
+}
+.twitter{
+  font-weight: bold;
+}
+.notes{
+  margin-bottom: 5px;
+}
+.edit-button{
+  @include all-button;
+}
+.edit-button:hover{
+  @include button-hover;
+}
