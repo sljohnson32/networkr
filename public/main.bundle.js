@@ -29568,7 +29568,7 @@
 	          _react2.default.createElement(
 	            'h1',
 	            null,
-	            'Welcome To Networkr'
+	            'Networkr'
 	          )
 	        ),
 	        user ? _react2.default.createElement(_HomeScreen2.default, {
@@ -47456,11 +47456,22 @@
 	        'div',
 	        { className: 'welcome-container' },
 	        _react2.default.createElement(
-	          'button',
-	          { className: 'sign-in-btn', onClick: function onClick() {
-	              return signIn();
-	            } },
-	          'Sign In'
+	          'h2',
+	          null,
+	          'Welcome to Networkr!'
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Please ',
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'sign-in-btn', onClick: function onClick() {
+	                return signIn();
+	              } },
+	            ' Sign In '
+	          ),
+	          ' to get started'
 	        )
 	      );
 	    }
@@ -47575,16 +47586,6 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'home-screen' },
-	        _react2.default.createElement(
-	          'button',
-	          {
-	            className: 'btn-signout',
-	            onClick: function onClick() {
-	              return signOut();
-	            }
-	          },
-	          'Sign Out'
-	        ),
 	        _react2.default.createElement(_Navigation2.default, {
 	          onHome: this.state.onHome,
 	          displayHome: this.displayHome.bind(this),
@@ -47679,35 +47680,16 @@
 	        { className: 'home-container' },
 	        _react2.default.createElement(
 	          'section',
-	          { className: 'upcoming-follow-ups' },
+	          { className: 'welcome-msg' },
 	          _react2.default.createElement(
 	            'h2',
-	            { className: 'follow-ups',
-	              onClick: function onClick() {
-	                return displayFollowUpzz();
-	              } },
-	            'Follow-up'
+	            null,
+	            'Welcome to Networkr.'
 	          ),
 	          _react2.default.createElement(
 	            'p',
 	            null,
-	            'This is where we\'ll map upcoming follow-ups with contacts'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'section',
-	          { className: 'recent-contacts' },
-	          _react2.default.createElement(
-	            'h2',
-	            { className: 'display-contactzz', onClick: function onClick() {
-	                return displayContactzz();
-	              } },
-	            'Most Recent Contacts'
-	          ),
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'This is where we\'ll map most recent contacts touched'
+	            'Use that navigation bar to review your contacts and/or track your follow-ups'
 	          )
 	        )
 	      );
@@ -48015,11 +47997,6 @@
 	          'aside',
 	          { className: 'all-contactzz' },
 	          _react2.default.createElement(
-	            'h2',
-	            null,
-	            'Contacts'
-	          ),
-	          _react2.default.createElement(
 	            'section',
 	            { className: 'add-new-container' },
 	            _react2.default.createElement(
@@ -48032,6 +48009,11 @@
 	              },
 	              'Add Contact'
 	            )
+	          ),
+	          _react2.default.createElement(
+	            'h3',
+	            { className: 'contact-directory' },
+	            'Contact Directory'
 	          ),
 	          contactzz.map(function (contact, index) {
 	            var card = _react2.default.createElement(_ContactCard2.default, {
@@ -63754,7 +63736,7 @@
 	
 	
 	// module
-	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\nbody {\n  background-color: #95a5a6; }\n\n.welcome-container {\n  display: flex;\n  flex-direction: column;\n  align-items: center; }\n\n.sign-in-btn {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF; }\n\n.sign-in-btn:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.nav-selected {\n  padding: 0 3px;\n  background-color: cornflowerblue; }\n\n.btn-signout {\n  position: absolute;\n  left: 5px;\n  top: 10px;\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF;\n  cursor: pointer; }\n\n.btn-addnew {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF;\n  cursor: pointer;\n  margin-top: 25px; }\n\n.btn-addnew:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.btn-signout:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.header {\n  display: flex;\n  justify-content: center;\n  font-family: 'Space Mono', monospace;\n  font-weight: 700;\n  font-size: 48px;\n  background-color: #415F9D;\n  padding: 40px; }\n\n.btn-container {\n  display: flex;\n  justify-content: center; }\n\n.navbar {\n  background-color: #E3F8FF;\n  display: flex;\n  justify-content: center; }\n\n.nav-list {\n  display: flex;\n  justify-content: center; }\n\n.home {\n  cursor: pointer; }\n\n.follow-up {\n  margin: 0 10px 0 10px;\n  cursor: pointer; }\n\n.contact {\n  cursor: pointer; }\n\n.input-container {\n  display: flex;\n  flex-direction: column;\n  align-items: center; }\n\n.submit-contact {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF; }\n\n.submit-contact:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.first-name-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.last-name-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.organization-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.email-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.social-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.github-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.twitter-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.notes-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.add-new-container {\n  display: flex;\n  justify-content: center; }\n\n.selected-user:hover {\n  cursor: pointer;\n  width: 150px; }\n\n.displayed-container {\n  display: flex;\n  flex-direction: column;\n  align-items: center; }\n\n.contact-name {\n  font-weight: bolder;\n  margin: 10px 0; }\n\n.org {\n  font-weight: bolder; }\n\n.email {\n  font-weight: bolder; }\n\n.social-header {\n  font-weight: bolder;\n  margin: 10px 0; }\n\n.notes-header {\n  font-weight: bolder;\n  margin: 10px 0; }\n\n.facebook {\n  font-weight: bolder; }\n\n.github {\n  font-weight: bold; }\n\n.twitter {\n  font-weight: bold; }\n\n.notes {\n  margin-bottom: 5px; }\n\n.edit-button {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF; }\n\n.edit-button:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n", ""]);
+	exports.push([module.id, "/* http://meyerweb.com/eric/tools/css/reset/\n   v2.0 | 20110126\n   License: none (public domain)\n*/\nhtml, body, div, span, applet, object, iframe,\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\na, abbr, acronym, address, big, cite, code,\ndel, dfn, em, img, ins, kbd, q, s, samp,\nsmall, strike, strong, sub, sup, tt, var,\nb, u, i, center,\ndl, dt, dd, ol, ul, li,\nfieldset, form, label, legend,\ntable, caption, tbody, tfoot, thead, tr, th, td,\narticle, aside, canvas, details, embed,\nfigure, figcaption, footer, header, hgroup,\nmenu, nav, output, ruby, section, summary,\ntime, mark, audio, video {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  font-size: 100%;\n  font: inherit;\n  vertical-align: baseline; }\n\n/* HTML5 display-role reset for older browsers */\narticle, aside, details, figcaption, figure,\nfooter, header, hgroup, menu, nav, section {\n  display: block; }\n\nbody {\n  line-height: 1; }\n\nol, ul {\n  list-style: none; }\n\nblockquote, q {\n  quotes: none; }\n\nblockquote:before, blockquote:after,\nq:before, q:after {\n  content: '';\n  content: none; }\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 0; }\n\n.btn-signout {\n  position: absolute;\n  left: 5px;\n  top: 10px;\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF;\n  cursor: pointer; }\n\n.btn-addnew {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF;\n  cursor: pointer;\n  margin-top: 25px; }\n\n.btn-addnew:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.btn-signout:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.header {\n  display: flex;\n  justify-content: center;\n  font-family: 'Space Mono', monospace;\n  font-weight: 700;\n  font-size: 48px;\n  background-color: #415F9D;\n  padding: 40px; }\n\n.btn-container {\n  display: flex;\n  justify-content: center; }\n\n.navbar {\n  background-color: #E3F8FF;\n  display: flex;\n  justify-content: center; }\n\n.nav-list {\n  display: flex;\n  justify-content: center;\n  height: 30px;\n  align-items: center; }\n\n.home {\n  cursor: pointer; }\n\n.follow-up {\n  margin: 0 10px 0 10px;\n  cursor: pointer; }\n\n.contact {\n  cursor: pointer; }\n\n.welcome-msg {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding-top: 20px; }\n  .welcome-msg h2 {\n    margin: 20px;\n    font-size: 20px;\n    font-weight: bold; }\n\n.add-new-container {\n  text-align: center;\n  margin: 0 30px 20px; }\n\n.all-contactzz {\n  display: inline-block;\n  width: 30%;\n  height: 80%; }\n\n.contact-directory {\n  display: inline-block;\n  text-align: center; }\n  .contact-directory h3 {\n    margin: 10px; }\n\n.displayed-container {\n  text-align: center; }\n\n.user .selected-user {\n  text-align: center; }\n\n.selected-user:hover {\n  cursor: pointer;\n  width: 150px; }\n\n.contact-info {\n  display: inline-block;\n  width: 60%; }\n\n.contact-name {\n  font-weight: bolder;\n  margin: 10px 0; }\n\n.org {\n  font-weight: bolder; }\n\n.email {\n  font-weight: bolder; }\n\n.social-header {\n  font-weight: bolder;\n  margin: 10px 0; }\n\n.notes-header {\n  font-weight: bolder;\n  margin: 10px 0; }\n\n.facebook {\n  font-weight: bolder; }\n\n.github {\n  font-weight: bold; }\n\n.twitter {\n  font-weight: bold; }\n\n.notes {\n  margin-bottom: 5px; }\n\n.edit-button {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF; }\n\n.edit-button:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.input-container {\n  display: flex;\n  flex-direction: column;\n  align-items: center; }\n\n.submit-contact {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF; }\n\n.submit-contact:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.first-name-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.last-name-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.organization-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.email-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.social-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.github-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.twitter-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.notes-input {\n  display: block;\n  margin: 10px 0 10px 0; }\n\n.welcome-container {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding-top: 30px; }\n  .welcome-container h2 {\n    margin: 20px;\n    font-size: 20px;\n    font-weight: bold; }\n\n.sign-in-btn {\n  border: none;\n  border-radius: 12px;\n  background-color: #E3F8FF; }\n\n.sign-in-btn:hover {\n  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19); }\n\n.nav-selected {\n  padding: 0 3px;\n  text-decoration: underline;\n  font-weight: bolder;\n  font-size: 20px; }\n\nbody {\n  background-color: #95a5a6; }\n", ""]);
 	
 	// exports
 
